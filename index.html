@@ -38,13 +38,14 @@
         }
         
         .powerbi-container {
-            width: 100%;
-            height: 600px;
-            border: 2px solid #0066cc;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
+    width: 100%;
+    height: 80vh;
+    min-height: 700px;
+    border: none; /* Прибираємо зовнішню рамку */
+    border-radius: 0px; /* Прибираємо заокруглення */
+    overflow: hidden;
+    margin-top: 20px;
+}
         
         .powerbi-frame {
             width: 100%;
@@ -86,12 +87,16 @@
             </div>
             
             <div class="powerbi-container">
-                <div class="powerbi-container">
-    <iframe title="New BI" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiZGY3OTBlODgtYjJmYy00M2FhLThiMzAtNGE2NDU2NDBjZWM4IiwidCI6ImVmN2E2YTFmLTUwMjItNDlmOS1iNjA0LTIzZmUwNDI5YTE5MSIsImMiOjl9&navContentPaneEnabled=false&filterPaneEnabled=false&chromeless=1" frameborder="0" 
-        allowFullScreen="false"
-        scrolling="no"
-        style="border: none; overflow: hidden;">
-</iframe>
+    <iframe class="powerbi-frame" 
+            title="Трекер прогресу Розділи 23/24" 
+            width="100%" 
+            height="100%" 
+            src="https://app.powerbi.com/view?r=eyJrIjoiZGY3OTBlODgtYjJmYy00M2FhLThiMzAtNGE2NDU2NDBjZWM4IiwidCI6ImVmN2E2YTFmLTUwMjItNDlmOS1iNjA0LTIzZmUwNDI5YTE5MSIsImMiOjl9&chromeless=1&navContentPaneEnabled=false&filterPaneEnabled=false"
+            frameborder="0" 
+            scrolling="no"
+            allowFullScreen="false"
+            style="border: none; display: block;">
+    </iframe>
 </div>
                 <div class="placeholder">
                     <div>
