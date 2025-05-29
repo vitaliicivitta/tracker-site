@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер прогресу - Розділи 23/24</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0066cc, #ffd700);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .tracker-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 30px;
+        }
+        
+        .powerbi-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #0066cc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .powerbi-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .description {
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Платформа моніторингу євроінтеграційного прогресу України</h1>
+        <p>Розділи 23 та 24: Судова влада та фундаментальні права | Юстиція, свобода і безпека</p>
+    </header>
+    
+    <div class="container">
+        <div class="tracker-section">
+            <h2>Трекер прогресу</h2>
+            <div class="description">
+                <p>Інтерактивна панель моніторингу з візуалізацією прогресу реалізації Дорожньої карти з верховенства права та виконання рекомендацій ЄС.</p>
+                <p><strong>Поточний статус:</strong> Розділ 24 - 67% | Розділ 23 - 58%</p>
+            </div>
+            
+            <div class="powerbi-container">
+                <!-- СЮДИ ПОТРІБНО БУДЕ ВСТАВИТИ ВАШ POWER BI IFRAME -->
+                <div class="placeholder">
+                    <div>
+                        <h3>Тут буде ваш Power BI графік</h3>
+                        <p>Замініть цей блок на iframe з Power BI</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
