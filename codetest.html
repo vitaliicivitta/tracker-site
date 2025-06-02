@@ -148,6 +148,21 @@
             color: #666;
             margin-top: 5px;
         }
+
+        .refresh-button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .refresh-button:hover {
+            background: #357abd;
+        }
         
         /* Адаптивність */
         @media (max-width: 768px) {
@@ -185,30 +200,32 @@
             <h2>Трекер прогресу</h2>
             <div class="description">
                 <p>Інтерактивна панель моніторингу з візуалізацією прогресу реалізації Дорожньої карти з верховенства права та виконання рекомендацій ЄС.</p>
-                <p><strong>Поточний статус:</strong> <span id="current-status">Розділ 24 - 67% | Розділ 23 - 58%</span></p>
+                <p><strong>Поточний статус:</strong> <span id="current-status">Завантаження...</span></p>
             </div>
+
+            <button class="refresh-button" onclick="loadData()">🔄 Оновити дані</button>
             
             <div class="progress-tracker">
-                <div class="progress-item">
+                <div class="progress-item" data-section="Розділ 24">
                     <div class="progress-label">Розділ 24</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" data-progress="67" style="--progress-width: 67%"></div>
+                        <div class="progress-bar" data-progress="0" style="--progress-width: 0%"></div>
                     </div>
-                    <div class="progress-value">67%</div>
+                    <div class="progress-value">0%</div>
                 </div>
                 
-                <div class="progress-item">
+                <div class="progress-item" data-section="Розділ 23">
                     <div class="progress-label">Розділ 23</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" data-progress="58" style="--progress-width: 58%"></div>
+                        <div class="progress-bar" data-progress="0" style="--progress-width: 0%"></div>
                     </div>
-                    <div class="progress-value">58%</div>
+                    <div class="progress-value">0%</div>
                 </div>
                 
                 <!-- Додаткова статистика -->
                 <div class="stats-summary">
                     <div class="stat-item">
-                        <span class="stat-value" id="avg-progress">62.5%</span>
+                        <span class="stat-value" id="avg-progress">0%</span>
                         <div class="stat-label">Середній прогрес</div>
                     </div>
                     <div class="stat-item">
@@ -225,19 +242,21 @@
     </div>
 
     <script>
-        // Функція для оновлення даних трекера
-        function updateProgress(data) {
-            const progressBars = document.querySelectorAll('.progress-bar');
-            const progressValues = document.querySelectorAll('.progress-value');
-            
-            data.forEach((item, index) => {
-                if (progressBars[index] && progressValues[index]) {
+        // Функція для оновлення прогресу за назвою розділу
+        function updateProgressBySection(data) {
+            data.forEach(item => {
+                // Знаходимо елемент з відповідною назвою розділу
+                const progressItem = document.querySelector(`[data-section="${item.label}"]`);
+                if (progressItem) {
+                    const progressBar = progressItem.querySelector('.progress-bar');
+                    const progressValue = progressItem.querySelector('.progress-value');
+                    
                     // Оновлюємо ширину прогрес-бара
-                    progressBars[index].style.setProperty('--progress-width', item.progress + '%');
-                    progressBars[index].setAttribute('data-progress', item.progress);
+                    progressBar.style.setProperty('--progress-width', item.progress + '%');
+                    progressBar.setAttribute('data-progress', item.progress);
                     
                     // Оновлюємо текстове значення
-                    progressValues[index].textContent = item.progress + '%';
+                    progressValue.textContent = item.progress + '%';
                 }
             });
             
@@ -251,70 +270,50 @@
         }
         
         // Функція для завантаження даних з Google Sheets
-async function loadData() {
-    try {
-        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQgvcN2wNtjGNj7QZDdo7b5ZjzMusZLrET1ZxG25LZceqtClSGKhZhUiRfainsIfT85Gs5fVWsKFGLw/pub?gid=0&single=true&output=csv');
-        const csvText = await response.text();
-        
-        console.log('Завантажені дані CSV:', csvText); // Для дебагу
-        
-        // Парсинг CSV даних
-        const rows = csvText.split('\n').filter(row => row.trim()); // Видаляємо порожні рядки
-        const data = [];
-        
-        // Пропускаємо заголовок (перший рядок) і обробляємо дані
-        for (let i = 1; i < rows.length; i++) {
-            const columns = rows[i].split(',');
-            if (columns.length >= 2) {
-                const label = columns[0].trim().replace(/"/g, ''); // Видаляємо лапки
-                const progressText = columns[1].trim().replace(/"/g, ''); // Видаляємо лапки
-                const progress = parseInt(progressText.replace('%', '')); // Видаляємо % і конвертуємо в число
-                
-                if (label && !isNaN(progress)) {
-                    data.push({
-                        label: label,
-                        progress: progress
-                    });
-                }
-            }
-        }
-        
-        console.log('Оброблені дані:', data); // Для дебагу
-        
-        if (data.length > 0) {
-            updateProgress(data);
-        } else {
-            throw new Error('Не вдалося обробити дані з таблиці');
-        }
-        
-    } catch (error) {
-        console.log('Помилка завантаження даних:', error);
-        // Fallback до тестових даних
-        const mockData = [
-            { label: 'Розділ 24', progress: 67 },
-            { label: 'Розділ 23', progress: 58 }
-        ];
-        updateProgress(mockData);
-    }
-}
-        
-        // Функція для підключення до Google Sheets (приклад)
-        async function loadFromGoogleSheets() {
+        async function loadData() {
             try {
-                // Замінь на свій URL Google Sheets API
-                const response = await fetch('YOUR_GOOGLE_SHEETS_API_URL');
-                const data = await response.json();
+                const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQgvcN2wNtjGNj7QZDdo7b5ZjzMusZLrET1ZxG25LZceqtClSGKhZhUiRfainsIfT85Gs5fVWsKFGLw/pub?gid=0&single=true&output=csv');
+                const csvText = await response.text();
                 
-                // Обробка даних з Google Sheets
-                const processedData = data.values.map(row => ({
-                    label: row[0],
-                    progress: parseInt(row[1])
-                }));
+                console.log('Завантажені дані CSV:', csvText);
                 
-                updateProgress(processedData);
+                // Парсинг CSV даних
+                const rows = csvText.split('\n').filter(row => row.trim());
+                const data = [];
+                
+                // Пропускаємо заголовок і обробляємо дані
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(',');
+                    if (columns.length >= 2) {
+                        const label = columns[0].trim().replace(/"/g, '');
+                        const progressText = columns[1].trim().replace(/"/g, '');
+                        const progress = parseInt(progressText.replace('%', ''));
+                        
+                        if (label && !isNaN(progress)) {
+                            data.push({
+                                label: label,
+                                progress: progress
+                            });
+                        }
+                    }
+                }
+                
+                console.log('Оброблені дані:', data);
+                
+                if (data.length > 0) {
+                    updateProgressBySection(data);
+                } else {
+                    throw new Error('Не вдалося обробити дані з таблиці');
+                }
+                
             } catch (error) {
-                console.log('Використовуємо тестові дані');
-                loadData(); // Fallback до тестових даних
+                console.log('Помилка завантаження даних:', error);
+                // Fallback до тестових даних
+                const mockData = [
+                    { label: 'Розділ 24', progress: 67 },
+                    { label: 'Розділ 23', progress: 58 }
+                ];
+                updateProgressBySection(mockData);
             }
         }
         
@@ -322,8 +321,8 @@ async function loadData() {
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             
-            // Оновлення даних кожні 30 секунд (опціонально)
-            // setInterval(loadData, 30000);
+            // Автоматичне оновлення кожні 2 хвилини
+            setInterval(loadData, 120000);
         });
         
         // Функція для додавання інтерактивності
