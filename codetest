@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер прогресу - Розділи 23/24</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0066cc, #ffd700);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .tracker-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 30px;
+        }
+        
+        .description {
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        /* Стилі для трекера прогресу */
+        .progress-tracker {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .progress-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .progress-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .progress-label {
+            width: 80px;
+            font-weight: 500;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar-container {
+            flex: 1;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4a90e2, #357abd);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            border-radius: 4px;
+        }
+        
+        .progress-value {
+            color: #4a90e2;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        /* Анімація завантаження */
+        .progress-bar {
+            width: 0;
+            animation: loadProgress 2s ease-out forwards;
+        }
+        
+        @keyframes loadProgress {
+            to {
+                width: var(--progress-width);
+            }
+        }
+        
+        /* Додаткові стилі для красивого вигляду */
+        .stats-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .progress-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .progress-label {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .progress-bar-container {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .stats-summary {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Платформа моніторингу євроінтеграційного прогресу України</h1>
+        <p>Розділи 23 та 24: Судова влада та фундаментальні права | Юстиція, свобода і безпека</p>
+    </header>
+    
+    <div class="container">
+        <div class="tracker-section">
+            <h2>Трекер прогресу</h2>
+            <div class="description">
+                <p>Інтерактивна панель моніторингу з візуалізацією прогресу реалізації Дорожньої карти з верховенства права та виконання рекомендацій ЄС.</p>
+                <p><strong>Поточний статус:</strong> <span id="current-status">Розділ 24 - 67% | Розділ 23 - 58%</span></p>
+            </div>
+            
+            <div class="progress-tracker">
+                <div class="progress-item">
+                    <div class="progress-label">Розділ 24</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-progress="67" style="--progress-width: 67%"></div>
+                    </div>
+                    <div class="progress-value">67%</div>
+                </div>
+                
+                <div class="progress-item">
+                    <div class="progress-label">Розділ 23</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-progress="58" style="--progress-width: 58%"></div>
+                    </div>
+                    <div class="progress-value">58%</div>
+                </div>
+                
+                <!-- Додаткова статистика -->
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-value" id="avg-progress">62.5%</span>
+                        <div class="stat-label">Середній прогрес</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-chapters">2</span>
+                        <div class="stat-label">Розділи у роботі</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="last-update">Червень 2025</span>
+                        <div class="stat-label">Останнє оновлення</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функція для оновлення даних трекера
+        function updateProgress(data) {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            const progressValues = document.querySelectorAll('.progress-value');
+            
+            data.forEach((item, index) => {
+                if (progressBars[index] && progressValues[index]) {
+                    // Оновлюємо ширину прогрес-бара
+                    progressBars[index].style.setProperty('--progress-width', item.progress + '%');
+                    progressBars[index].setAttribute('data-progress', item.progress);
+                    
+                    // Оновлюємо текстове значення
+                    progressValues[index].textContent = item.progress + '%';
+                }
+            });
+            
+            // Оновлюємо середній прогрес
+            const avgProgress = data.reduce((sum, item) => sum + item.progress, 0) / data.length;
+            document.getElementById('avg-progress').textContent = avgProgress.toFixed(1) + '%';
+            
+            // Оновлюємо статус у описі
+            const statusText = data.map(item => `${item.label} - ${item.progress}%`).join(' | ');
+            document.getElementById('current-status').textContent = statusText;
+        }
+        
+        // Функція для завантаження даних (можна підключити до API)
+        function loadData() {
+            // Тут можеш підключити реальне джерело даних
+            // Наприклад, Google Sheets, JSON файл, або API
+            
+            const mockData = [
+                { label: 'Розділ 24', progress: 67 },
+                { label: 'Розділ 23', progress: 58 }
+            ];
+            
+            updateProgress(mockData);
+        }
+        
+        // Функція для підключення до Google Sheets (приклад)
+        async function loadFromGoogleSheets() {
+            try {
+                // Замінь на свій URL Google Sheets API
+                const response = await fetch('YOUR_GOOGLE_SHEETS_API_URL');
+                const data = await response.json();
+                
+                // Обробка даних з Google Sheets
+                const processedData = data.values.map(row => ({
+                    label: row[0],
+                    progress: parseInt(row[1])
+                }));
+                
+                updateProgress(processedData);
+            } catch (error) {
+                console.log('Використовуємо тестові дані');
+                loadData(); // Fallback до тестових даних
+            }
+        }
+        
+        // Ініціалізація при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            
+            // Оновлення даних кожні 30 секунд (опціонально)
+            // setInterval(loadData, 30000);
+        });
+        
+        // Функція для додавання інтерактивності
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
