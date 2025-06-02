@@ -250,18 +250,53 @@
             document.getElementById('current-status').textContent = statusText;
         }
         
-        // Функція для завантаження даних (можна підключити до API)
-        function loadData() {
-            // Тут можеш підключити реальне джерело даних
-            // Наприклад, Google Sheets, JSON файл, або API
-            
-            const mockData = [
-                { label: 'Розділ 24', progress: 67 },
-                { label: 'Розділ 23', progress: 58 }
-            ];
-            
-            updateProgress(mockData);
+        // Функція для завантаження даних з Google Sheets
+async function loadData() {
+    try {
+        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQgvcN2wNtjGNj7QZDdo7b5ZjzMusZLrET1ZxG25LZceqtClSGKhZhUiRfainsIfT85Gs5fVWsKFGLw/pub?gid=0&single=true&output=csv');
+        const csvText = await response.text();
+        
+        console.log('Завантажені дані CSV:', csvText); // Для дебагу
+        
+        // Парсинг CSV даних
+        const rows = csvText.split('\n').filter(row => row.trim()); // Видаляємо порожні рядки
+        const data = [];
+        
+        // Пропускаємо заголовок (перший рядок) і обробляємо дані
+        for (let i = 1; i < rows.length; i++) {
+            const columns = rows[i].split(',');
+            if (columns.length >= 2) {
+                const label = columns[0].trim().replace(/"/g, ''); // Видаляємо лапки
+                const progressText = columns[1].trim().replace(/"/g, ''); // Видаляємо лапки
+                const progress = parseInt(progressText.replace('%', '')); // Видаляємо % і конвертуємо в число
+                
+                if (label && !isNaN(progress)) {
+                    data.push({
+                        label: label,
+                        progress: progress
+                    });
+                }
+            }
         }
+        
+        console.log('Оброблені дані:', data); // Для дебагу
+        
+        if (data.length > 0) {
+            updateProgress(data);
+        } else {
+            throw new Error('Не вдалося обробити дані з таблиці');
+        }
+        
+    } catch (error) {
+        console.log('Помилка завантаження даних:', error);
+        // Fallback до тестових даних
+        const mockData = [
+            { label: 'Розділ 24', progress: 67 },
+            { label: 'Розділ 23', progress: 58 }
+        ];
+        updateProgress(mockData);
+    }
+}
         
         // Функція для підключення до Google Sheets (приклад)
         async function loadFromGoogleSheets() {
