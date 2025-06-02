@@ -38,19 +38,23 @@
         }
         
         .powerbi-container {
-    width: 100%;
-    height: 80vh;
-    min-height: 700px;
-    border: none; /* Прибираємо зовнішню рамку */
-    border-radius: 0px; /* Прибираємо заокруглення */
-    overflow: hidden;
-    margin-top: 20px;
-}
+            width: 100%;
+            height: 80vh;
+            min-height: 700px;
+            border: none;
+            border-radius: 0px;
+            overflow: hidden;
+            margin-top: 20px;
+            /* Додаткові стилі для кращого відображення */
+            position: relative;
+            background: #ffffff;
+        }
         
         .powerbi-frame {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
         }
         
         .description {
@@ -60,16 +64,7 @@
             font-size: 16px;
         }
         
-        .placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background: #f8f9fa;
-            color: #666;
-            font-size: 18px;
-            text-align: center;
-        }
+        /* Видаляємо стилі для placeholder, оскільки вони більше не потрібні */
     </style>
 </head>
 <body>
@@ -87,23 +82,16 @@
             </div>
             
             <div class="powerbi-container">
-    <iframe class="powerbi-frame" 
-            title="Трекер прогресу Розділи 23/24" 
-            width="100%" 
-            height="100%" 
-            src="https://app.powerbi.com/view?r=eyJrIjoiZGY3OTBlODgtYjJmYy00M2FhLThiMzAtNGE2NDU2NDBjZWM4IiwidCI6ImVmN2E2YTFmLTUwMjItNDlmOS1iNjA0LTIzZmUwNDI5YTE5MSIsImMiOjl9&chromeless=1&navContentPaneEnabled=false&filterPaneEnabled=false"
-            frameborder="0" 
-            scrolling="no"
-            allowFullScreen="false"
-            style="border: none; display: block;">
-    </iframe>
-</div>
-                <div class="placeholder">
-                    <div>
-                        <h3>Тут буде ваш Power BI графік</h3>
-                        <p>Замініть цей блок на iframe з Power BI</p>
-                    </div>
-                </div>
+                <iframe class="powerbi-frame" 
+                        title="Трекер прогресу Розділи 23/24" 
+                        width="100%" 
+                        height="100%" 
+                        src="https://app.powerbi.com/view?r=eyJrIjoiZGY3OTBlODgtYjJmYy00M2FhLThiMzAtNGE2NDU2NDBjZWM4IiwidCI6ImVmN2E2YTFmLTUwMjItNDlmOS1iNjA0LTIzZmUwNDI5YTE5MSIsImMiOjl9&chromeless=1&navContentPaneEnabled=false&filterPaneEnabled=false"
+                        frameborder="0" 
+                        scrolling="no"
+                        allowFullScreen="false"
+                        style="border: none; display: block;">
+                </iframe>
             </div>
         </div>
     </div>
