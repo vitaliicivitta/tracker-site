@@ -206,16 +206,18 @@
             <button class="refresh-button" onclick="loadData()">🔄 Оновити дані</button>
             
             <div class="progress-tracker">
-                <div class="progress-item" data-section="Розділ 24">
-                    <div class="progress-label">Розділ 24</div>
+                <!-- Розділ 23 тепер перший -->
+                <div class="progress-item" data-section="Розділ 23">
+                    <div class="progress-label">Розділ 23</div>
                     <div class="progress-bar-container">
                         <div class="progress-bar" data-progress="0" style="--progress-width: 0%"></div>
                     </div>
                     <div class="progress-value">0%</div>
                 </div>
                 
-                <div class="progress-item" data-section="Розділ 23">
-                    <div class="progress-label">Розділ 23</div>
+                <!-- Розділ 24 тепер другий -->
+                <div class="progress-item" data-section="Розділ 24">
+                    <div class="progress-label">Розділ 24</div>
                     <div class="progress-bar-container">
                         <div class="progress-bar" data-progress="0" style="--progress-width: 0%"></div>
                     </div>
@@ -264,8 +266,13 @@
             const avgProgress = data.reduce((sum, item) => sum + item.progress, 0) / data.length;
             document.getElementById('avg-progress').textContent = avgProgress.toFixed(1) + '%';
             
-            // Оновлюємо статус у описі
-            const statusText = data.map(item => `${item.label} - ${item.progress}%`).join(' | ');
+            // Оновлюємо статус у описі (тепер Розділ 23 буде першим)
+            const sortedData = [...data].sort((a, b) => {
+                if (a.label.includes('23')) return -1;
+                if (b.label.includes('23')) return 1;
+                return 0;
+            });
+            const statusText = sortedData.map(item => `${item.label} - ${item.progress}%`).join(' | ');
             document.getElementById('current-status').textContent = statusText;
         }
         
@@ -310,8 +317,8 @@
                 console.log('Помилка завантаження даних:', error);
                 // Fallback до тестових даних
                 const mockData = [
-                    { label: 'Розділ 24', progress: 67 },
-                    { label: 'Розділ 23', progress: 58 }
+                    { label: 'Розділ 23', progress: 99 },
+                    { label: 'Розділ 24', progress: 67 }
                 ];
                 updateProgressBySection(mockData);
             }
