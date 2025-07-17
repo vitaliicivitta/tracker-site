@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер євроінтеграційного прогресу - Розділи 23/24</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0066cc, #ffd700);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .tracker-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin: 20px 0;
+            padding: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .refresh-button {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-button:hover {
+            background: #357abd;
+        }
+        
+        .refresh-button:active {
+            transform: scale(0.98);
+        }
+        
+        .status-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .status-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Стилі для розділів */
+        .chapter-tracker {
+            margin-bottom: 30px;
+        }
+        
+        .chapter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .chapter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .chapter-total {
+            font-size: 14px;
+            color: #666;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        /* Стилі для статусів */
+        .status-bar {
+            display: flex;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .status-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-segment span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .status-segment::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            z-index: 1;
+        }
+        
+        /* Кольори статусів */
+        .status-completed {
+            background-color: #28a745;
+        }
+        
+        .status-partial {
+            background-color: #ffc107;
+        }
+        
+        .status-inprogress {
+            background-color: #17a2b8;
+        }
+        
+        .status-notcompleted {
+            background-color: #dc3545;
+        }
+        
+        .status-notstarted {
+            background-color: #6c757d;
+        }
+        
+        /* Легенда статусів */
+        .status-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        /* Статистика */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4a90e2;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Анімація завантаження */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a90e2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ===== СТИЛІ ДЛЯ ДЕТАЛЬНОЇ ТАБЛИЦІ ===== */
+        
+        /* Фільтри */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-select, .search-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .search-input {
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        /* Заголовки розділів детальної таблиці */
+        .detail-section-header {
+            background: #0066cc;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0 0 0;
+        }
+        
+        .subsection-header {
+            background: #4a90e2;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        
+        /* Таблиця заходів */
+        .measures-table-container {
+            margin-top: 20px;
+        }
+        
+        .measures-group {
+            background: white;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 2px;
+        }
+        
+        .measures-group table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .target-cell {
+            background: #f8f9fa;
+            font-weight: 500;
+            width: 40%;
+            padding: 15px;
+            vertical-align: top;
+            border-right: 2px solid #e0e0e0;
+        }
+        
+        .measures-cell {
+            width: 60%;
+            padding: 0 !important;
+            vertical-align: top;
+        }
+        
+        .measure-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .measure-item:last-child {
+            border-bottom: none;
+        }
+        
+        .measure-details {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .measure-meta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        /* Статуси в детальній таблиці */
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-indicator.completed { background: #28a745; }
+        .status-indicator.partial { background: #ffc107; }
+        .status-indicator.inprogress { background: #17a2b8; }
+        .status-indicator.notcompleted { background: #dc3545; }
+        .status-indicator.notstarted { background: #6c757d; }
+        
+        /* Тексти */
+        .target-code, .measure-code {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .measure-name {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .measure-responsible, .measure-deadline {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 22px;
+            }
+            
+            .chapter-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .status-legend {
+                justify-content: center;
+            }
+            
+            .status-segment {
+                font-size: 12px;
+            }
+            
+            .tracker-section {
+                padding: 20px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                max-width: 100%;
+            }
+            
+            .target-cell, .measures-cell {
+                width: 100%;
+                display: block;
+            }
+            
+            .target-cell {
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+            }
+            
+            .measure-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .measure-meta {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Платформа моніторингу євроінтеграційного прогресу України</h1>
+        <p>Розділи 23 та 24: Правосуддя та права людини | Юстиція, свобода і безпека</p>
+    </header>
+    
+    <div class="container">
+        <!-- Загальний трекер прогресу -->
+        <div class="tracker-section">
+            <div class="section-header">
+                <h2>Трекер прогресу виконання заходів</h2>
+                <button class="refresh-button" onclick="loadAllData()">
+                    <span id="refresh-icon">🔄</span>
+                    <span>Оновити дані</span>
+                </button>
+            </div>
+            
+            <div class="status-info">
+                <p><strong>Поточний стан:</strong> <span id="current-date">Липень 2025</span></p>
+                <p><strong>Останнє оновлення:</strong> <span id="last-update">Завантаження...</span></p>
+            </div>
+            
+            <!-- Легенда статусів -->
+            <div class="status-legend">
+                <div class="legend-item">
+                    <div class="legend-color status-completed"></div>
+                    <span>Виконано</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color status-partial"></div>
+                    <span>Виконано частково</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color status-inprogress"></div>
+                    <span>Виконується</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color status-notcompleted"></div>
+                    <span>Не виконано</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color status-notstarted"></div>
+                    <span>Не розпочато</span>
+                </div>
+            </div>
+            
+            <!-- Розділ 23 -->
+            <div class="chapter-tracker" id="chapter23">
+                <div class="chapter-header">
+                    <h3 class="chapter-title">Розділ 23: Правосуддя та права людини</h3>
+                    <span class="chapter-total">Завантаження...</span>
+                </div>
+                <div class="status-bar" id="status-bar-23">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- Розділ 24 -->
+            <div class="chapter-tracker" id="chapter24">
+                <div class="chapter-header">
+                    <h3 class="chapter-title">Розділ 24: Юстиція, свобода та безпека</h3>
+                    <span class="chapter-total">Всього заходів: 237</span>
+                </div>
+                <div class="status-bar" id="status-bar-24">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- Статистика -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="total-measures">0</span>
+                    <div class="stat-label">Загальна кількість заходів</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="completed-measures">0</span>
+                    <div class="stat-label">Виконано заходів</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="progress-percentage">0%</span>
+                    <div class="stat-label">Загальний прогрес</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="active-measures">0</span>
+                    <div class="stat-label">Заходів в роботі</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Детальний перелік заходів -->
+        <div class="tracker-section">
+            <div class="section-header">
+                <h2>Детальний перелік заходів</h2>
+                <div class="filter-controls">
+                    <select id="status-filter" class="filter-select" onchange="filterTable()">
+                        <option value="">Всі статуси</option>
+                        <option value="completed">Виконано</option>
+                        <option value="partial">Виконано частково</option>
+                        <option value="inprogress">Виконується</option>
+                        <option value="notcompleted">Не виконано</option>
+                        <option value="notstarted">Не розпочато</option>
+                    </select>
+                    
+                    <input type="text" id="search-input" class="search-input" 
+                           placeholder="Пошук за кодом або назвою..." 
+                           oninput="filterTable()">
+                </div>
+            </div>
+            
+            <div class="measures-table-container">
+                <div id="measures-content">
+                    <!-- Тут буде згенерований контент -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== ЗАГАЛЬНІ ДАНІ ТА ФУНКЦІЇ =====
+        
+        // Дані про статуси для загального трекера
+        const statusData = {
+            chapter23: {
+                total: 350,
+                statuses: {
+                    completed: 0,
+                    partial: 0,
+                    inprogress: 0,
+                    notcompleted: 0,
+                    notstarted: 0
+                }
+            },
+            chapter24: {
+                total: 237,
+                statuses: {
+                    completed: 0,
+                    partial: 0,
+                    inprogress: 0,
+                    notcompleted: 0,
+                    notstarted: 0
+                }
+            }
+        };
+        
+        // Масив для збереження детальних даних
+        let measuresData = [];
+        let filteredData = [];
+
+        // ===== ФУНКЦІЇ ДЛЯ ЗАГАЛЬНОГО ТРЕКЕРА =====
+        
+        // Функція для створення статус-бару
+        function createStatusBar(chapterId, data) {
+            const statusBar = document.getElementById(`status-bar-${chapterId}`);
+            statusBar.innerHTML = '';
+            
+            const total = data.total;
+            if (total === 0) return;
+            
+            const statuses = [
+                { key: 'completed', class: 'status-completed', label: 'Виконано' },
+                { key: 'partial', class: 'status-partial', label: 'Частково' },
+                { key: 'inprogress', class: 'status-inprogress', label: 'Виконується' },
+                { key: 'notcompleted', class: 'status-notcompleted', label: 'Не виконано' },
+                { key: 'notstarted', class: 'status-notstarted', label: 'Не розпочато' }
+            ];
+            
+            statuses.forEach(status => {
+                const count = data.statuses[status.key];
+                const percentage = (count / total * 100).toFixed(1);
+                
+                if (count > 0) {
+                    const segment = document.createElement('div');
+                    segment.className = `status-segment ${status.class}`;
+                    segment.style.width = `${percentage}%`;
+                    segment.innerHTML = `<span>${count}</span>`;
+                    segment.title = `${status.label}: ${count} заходів (${percentage}%)`;
+                    statusBar.appendChild(segment);
+                }
+            });
+        }
+
+        // Функція для оновлення статистики
+        function updateStatistics() {
+            const total23 = statusData.chapter23.total;
+            const total24 = statusData.chapter24.total;
+            const totalMeasures = total23 + total24;
+            
+            const completed23 = statusData.chapter23.statuses.completed + statusData.chapter23.statuses.partial;
+            const completed24 = statusData.chapter24.statuses.completed + statusData.chapter24.statuses.partial;
+            const completedMeasures = completed23 + completed24;
+            
+            const active23 = statusData.chapter23.statuses.inprogress;
+            const active24 = statusData.chapter24.statuses.inprogress;
+            const activeMeasures = active23 + active24;
+            
+            const progressPercentage = totalMeasures > 0 
+                ? ((completedMeasures / totalMeasures) * 100).toFixed(1) 
+                : 0;
+            
+            document.getElementById('total-measures').textContent = totalMeasures;
+            document.getElementById('completed-measures').textContent = completedMeasures;
+            document.getElementById('progress-percentage').textContent = progressPercentage + '%';
+            document.getElementById('active-measures').textContent = activeMeasures;
+        }
+
+        // Функція для завантаження даних загального трекера
+        async function loadData() {
+            const refreshIcon = document.getElementById('refresh-icon');
+            refreshIcon.style.animation = 'spin 1s linear infinite';
+            
+            try {
+                // !!! ВСТАВТЕ ТУТ URL ВАШОЇ ТАБЛИЦІ ДЛЯ ЗАГАЛЬНИХ ДАНИХ !!!
+                const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQgvcN2wNtjGNj7QZDdo7b5ZjzMusZLrET1ZxG25LZceqtClSGKhZhUiRfainsIfT85Gs5fVWsKFGLw/pub?gid=1141562032&single=true&output=csv');
+                const csvText = await response.text();
+                
+                console.log('Завантажені дані CSV:', csvText);
+                
+                // Парсинг CSV даних
+                const rows = csvText.split('\n').filter(row => row.trim());
+                
+                // Обробка даних для розділу 24
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(',');
+                    if (columns.length >= 3) {
+                        const status = columns[0].trim().replace(/"/g, '');
+                        const count = parseInt(columns[1].trim().replace(/"/g, '')) || 0;
+                        
+                        // Мапування статусів
+                        if (status.includes('Виконано') && !status.includes('частково')) {
+                            statusData.chapter24.statuses.completed = count;
+                        } else if (status.includes('Виконано частково')) {
+                            statusData.chapter24.statuses.partial = count;
+                        } else if (status.includes('Виконується')) {
+                            statusData.chapter24.statuses.inprogress = count;
+                        } else if (status.includes('Не виконано')) {
+                            statusData.chapter24.statuses.notcompleted = count;
+                        } else if (status.includes('Не розпочато')) {
+                            statusData.chapter24.statuses.notstarted = count;
+                        }
+                    }
+                }
+                
+                // Тимчасові дані для розділу 23
+                statusData.chapter23.statuses = {
+                    completed: 150,
+                    partial: 50,
+                    inprogress: 80,
+                    notcompleted: 20,
+                    notstarted: 50
+                };
+                
+                // Оновлення візуалізації
+                createStatusBar('23', statusData.chapter23);
+                createStatusBar('24', statusData.chapter24);
+                updateStatistics();
+                
+                // Оновлення інформації про час
+                const now = new Date();
+                document.getElementById('last-update').textContent = now.toLocaleString('uk-UA');
+                
+                // Оновлення загальної кількості для розділу 23
+                document.querySelector('#chapter23 .chapter-total').textContent = 
+                    `Всього заходів: ${statusData.chapter23.total}`;
+                
+            } catch (error) {
+                console.error('Помилка завантаження даних:', error);
+                
+                // Використання тестових даних у разі помилки
+                statusData.chapter24.statuses = {
+                    completed: 100,
+                    partial: 7,
+                    inprogress: 30,
+                    notcompleted: 50,
+                    notstarted: 50
+                };
+                
+                statusData.chapter23.statuses = {
+                    completed: 150,
+                    partial: 50,
+                    inprogress: 80,
+                    notcompleted: 20,
+                    notstarted: 50
+                };
+                
+                createStatusBar('23', statusData.chapter23);
+                createStatusBar('24', statusData.chapter24);
+                updateStatistics();
+                
+                document.getElementById('last-update').textContent = 'Помилка завантаження';
+            } finally {
+                refreshIcon.style.animation = '';
+            }
+        }
+
+        // ===== ФУНКЦІЇ ДЛЯ ДЕТАЛЬНОЇ ТАБЛИЦІ =====
+        
+        // Парсер CSV рядка
+        function parseCSVRow(row) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result;
+        }
+        
+        // Завантаження детальних даних
+        async function loadDetailedData() {
+            try {
+                // !!! ВСТАВТЕ ТУТ URL ВАШОЇ ТАБЛИЦІ З ДЕТАЛЬНИМИ ДАНИМИ !!!
+                // const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQgvcN2wNtjGNj7QZDdo7b5ZjzMusZLrET1ZxG25LZceqtClSGKhZhUiRfainsIfT85Gs5fVWsKFGLw/pub?gid=1440097626&single=true&output=csv');
+                // const csvText = await response.text();
+                
+                // Поки що використовуємо тестові дані
+                loadTestData();
+                
+            } catch (error) {
+                console.error('Помилка завантаження детальних даних:', error);
+                loadTestData();
+            }
+        }
+        
+        // Тестові дані для демонстрації
+        function loadTestData() {
+            measuresData = [
+                { code: '4.0.0.0.0.0', name: 'ЮСТИЦІЯ СВОБОДА ТА БЕЗПЕКА', deadline: '', status: '', responsible: '' },
+                { code: '4.1.0.0.0.0', name: 'Судове співробітництво в кримінальних справах', deadline: '', status: '', responsible: '' },
+                { code: '4.1.0.1.0.0', name: 'Удосконалено правову основу для міжнародного судового співробітництва у кримінальних справах між Україною та країнами Європейського Союзу', deadline: '', status: '', responsible: '' },
+                { code: '4.1.0.1.1.0', name: 'Розроблення та прийняття закону про внесення змін до Кримінального кодексу України, Кримінального процесуального кодексу України з метою імплементації процедури європейського ордеру на арешт', deadline: 'IV квартал 2027', status: 'notstarted', responsible: 'Мін\'юст, Верховна Рада України' },
+                { code: '4.1.0.1.2.0', name: 'Внесення змін до національного законодавства для забезпечення можливості екстрадиції громадян України', deadline: 'IV квартал 2027', status: 'notstarted', responsible: 'Мін\'юст, Офіс Генерального прокурора' },
+                { code: '4.1.0.1.3.0', name: 'Розроблення та прийняття закону про внесення змін до КПК України щодо міжнародного співробітництва', deadline: 'IV квартал 2025', status: 'inprogress', responsible: 'Мін\'юст' },
+                { code: '4.1.0.2.0.0', name: 'Підвищено інституційну спроможність органів, які забезпечують міжнародне судове співробітництво', deadline: '', status: '', responsible: '' },
+                { code: '4.1.0.2.1.0', name: 'Впровадження в Мін\'юсті цифрової автоматизованої системи ведення справ', deadline: 'IV квартал 2027', status: 'notstarted', responsible: 'Мін\'юст, Мінцифри' },
+                { code: '4.2.0.0.0.0', name: 'Судове співробітництво в цивільних та комерційних справах', deadline: '', status: '', responsible: '' },
+                { code: '4.2.0.1.0.0', name: 'Удосконалено правову основу для міжнародного судового співробітництва у цивільних справах', deadline: '', status: '', responsible: '' },
+                { code: '4.2.0.1.1.0', name: 'Розроблення законів щодо вдосконалення механізму виконання Гаазької конвенції', deadline: 'IV квартал 2025', status: 'partial', responsible: 'Мін\'юст' }
+            ];
+            
+            filteredData = [...measuresData];
+            renderStructuredTable();
+        }
+        
+        // Групування даних по рівнях
+        function groupMeasuresByLevels(data) {
+            const structure = {};
+            
+            data.forEach(item => {
+                const parts = item.code.split('.');
+                
+                // Пропускаємо найвищий рівень
+                if (parts[1] === '0' && parts[2] === '0' && parts[3] === '0' && parts[4] === '0' && parts[5] === '0') {
+                    return;
+                }
+                
+                const chapter = `${parts[0]}.${parts[1]}`;
+                const subchapter = `${parts[0]}.${parts[1]}.${parts[2]}`;
+                const target = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3]}`;
+                
+                // Ініціалізація структури
+                if (!structure[chapter]) {
+                    structure[chapter] = { name: '', subchapters: {} };
+                }
+                
+                // Обробка різних рівнів
+                if (parts[2] === '0' && parts[3] === '0' && parts[4] === '0' && parts[5] === '0') {
+                    // Рівень розділу (4.1.0.0.0.0)
+                    structure[chapter].name = item.name;
+                } else if (parts[3] === '0' && parts[4] === '0' && parts[5] === '0' && parts[2] !== '0') {
+                    // Рівень підрозділу (4.1.1.0.0.0)
+                    if (!structure[chapter].subchapters[subchapter]) {
+                        structure[chapter].subchapters[subchapter] = { name: item.name, targets: {} };
+                    } else {
+                        structure[chapter].subchapters[subchapter].name = item.name;
+                    }
+                } else if (parts[4] === '0' && parts[5] === '0' && parts[3] !== '0') {
+                    // Рівень цільового результату (4.1.0.1.0.0)
+                    if (!structure[chapter].subchapters[subchapter]) {
+                        structure[chapter].subchapters[subchapter] = { name: '', targets: {} };
+                    }
+                    structure[chapter].subchapters[subchapter].targets[target] = {
+                        name: item.name,
+                        measures: []
+                    };
+                } else if (parts[4] !== '0') {
+                    // Рівень заходу (4.1.0.1.1.0)
+                    if (!structure[chapter].subchapters[subchapter]) {
+                        structure[chapter].subchapters[subchapter] = { name: '', targets: {} };
+                    }
+                    if (!structure[chapter].subchapters[subchapter].targets[target]) {
+                        structure[chapter].subchapters[subchapter].targets[target] = { name: '', measures: [] };
+                    }
+                    structure[chapter].subchapters[subchapter].targets[target].measures.push(item);
+                }
+            });
+            
+            return structure;
+        }
+        
+        // Рендеринг структурованої таблиці
+        function renderStructuredTable() {
+            const container = document.getElementById('measures-content');
+            container.innerHTML = '';
+            
+            const structure = groupMeasuresByLevels(filteredData);
+            
+            Object.keys(structure).sort().forEach(chapterKey => {
+                const chapter = structure[chapterKey];
+                
+                // Заголовок розділу
+                const chapterHeader = document.createElement('div');
+                chapterHeader.className = 'detail-section-header';
+                chapterHeader.textContent = `${chapterKey}. ${chapter.name}`;
+                container.appendChild(chapterHeader);
+                
+                // Підрозділи
+                Object.keys(chapter.subchapters).sort().forEach(subchapterKey => {
+                    const subchapter = chapter.subchapters[subchapterKey];
+                    
+                    if (subchapter.name && subchapterKey.split('.')[2] !== '0') {
+                        const subHeader = document.createElement('div');
+                        subHeader.className = 'subsection-header';
+                        subHeader.textContent = subchapter.name;
+                        container.appendChild(subHeader);
+                    }
+                    
+                    // Цільові результати
+                    Object.keys(subchapter.targets).sort().forEach(targetKey => {
+                        const target = subchapter.targets[targetKey];
+                        
+                        if (target.measures.length > 0) {
+                            const group = document.createElement('div');
+                            group.className = 'measures-group';
+                            
+                            const table = document.createElement('table');
+                            const row = document.createElement('tr');
+                            
+                            // Колонка цільового результату
+                            const targetCell = document.createElement('td');
+                            targetCell.className = 'target-cell';
+                            targetCell.innerHTML = `
+                                <div class="target-code">${targetKey}</div>
+                                <div>${target.name}</div>
+                            `;
+                            row.appendChild(targetCell);
+                            
+                            // Колонка заходів
+                            const measuresCell = document.createElement('td');
+                            measuresCell.className = 'measures-cell';
+                            
+                            target.measures.forEach(measure => {
+                                const measureDiv = document.createElement('div');
+                                measureDiv.className = 'measure-item';
+                                measureDiv.innerHTML = `
+                                    <div class="measure-details">
+                                        <div class="measure-code">${measure.code}</div>
+                                        <div class="measure-name">${measure.name}</div>
+                                        <div class="measure-responsible">${measure.responsible}</div>
+                                    </div>
+                                    <div class="measure-meta">
+                                        <span class="measure-deadline">${measure.deadline || '-'}</span>
+                                        <span class="status-indicator ${measure.status || 'notstarted'}" 
+                                              title="${getStatusLabel(measure.status || 'notstarted')}"></span>
+                                    </div>
+                                `;
+                                measuresCell.appendChild(measureDiv);
+                            });
+                            
+                            row.appendChild(measuresCell);
+                            table.appendChild(row);
+                            group.appendChild(table);
+                            container.appendChild(group);
+                        }
+                    });
+                });
+            });
+            
+            // Якщо немає даних
+            if (Object.keys(structure).length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Немає заходів, що відповідають критеріям пошуку</p>';
+            }
+        }
+        
+        // Отримання назви статусу
+        function getStatusLabel(status) {
+            const labels = {
+                'completed': 'Виконано',
+                'partial': 'Частково',
+                'inprogress': 'Виконується',
+                'notcompleted': 'Не виконано',
+                'notstarted': 'Не розпочато'
+            };
+            return labels[status] || 'Не розпочато';
+        }
+        
+        // Функція фільтрації таблиці
+        function filterTable() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            
+            filteredData = measuresData.filter(item => {
+                // Фільтр по статусу
+                const statusMatch = !statusFilter || item.status === statusFilter;
+                
+                // Фільтр по пошуку
+                const searchMatch = !searchQuery || 
+                    item.code.toLowerCase().includes(searchQuery) ||
+                    item.name.toLowerCase().includes(searchQuery) ||
+                    item.responsible.toLowerCase().includes(searchQuery);
+                
+                return statusMatch && searchMatch;
+            });
+            
+            renderStructuredTable();
+        }
+        
+        // Завантаження всіх даних
+        function loadAllData() {
+            loadData();
+            loadDetailedData();
+        }
+        
+        // Ініціалізація при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllData();
+            
+            // Автоматичне оновлення кожні 5 хвилин
+            setInterval(loadAllData, 300000);
+        });
+    </script>
+</body>
+</html>
